@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.itcast.mapper.StudentMapper">
+    
+    <resultMap id="studentResultMap" type="com.itcast.domain.Student">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="sex" property="sex"></result>
+        <result column="birthday" property="birthday"></result>
+        <result column="class_id" property="classId"></result>
+    </resultMap>
+
+    <sql id="base_column_list">
+        id,name,sex,birthday,class_id
+    </sql>
+
+    <select id="selectByClassId" parameterType="int" resultMap="studentResultMap">
+        select <include refid="base_column_list"/> from tb_student where class_id = #{classId, jdbcType = INTEGER}
+    </select>
+
+    <select id="selectAllPageable" resultMap="studentResultMap">
+        select <include refid="base_column_list"/> from tb_student
+    </select>
+
+    <select id="selectByClassIdPageable" resultMap="studentResultMap">
+        select <include refid="base_column_list"/> from tb_student where class_id = #{classId, jdbcType = INTEGER}
+    </select>
+
+</mapper>

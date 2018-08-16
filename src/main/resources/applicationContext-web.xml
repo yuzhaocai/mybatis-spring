@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 开启spring对Controller的扫描 -->
+    <context:component-scan base-package="com.xes.speiyou.controller"/>
+
+    <mvc:annotation-driven>
+        <mvc:message-converters>
+            <!-- 返回普通字符创的消息转换器 -->
+            <ref bean="stringMessageConverter"/>
+            <!-- 返回json的消息转换器 -->
+            <ref bean="fastJsonHttpMessageConverter"/>
+            <!-- 返回xml的消息转换器 -->
+            <ref bean="marshallingHttpMessageConverter"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 不进行拦截的,避免对静态资源进行拦截了 -->
+    <mvc:resources location="/" mapping="/**/*.html" order="0" />
+    <mvc:resources location="/images/" mapping="/images/**" />
+    <mvc:resources location="/img/" mapping="/img/**" />
+    <mvc:resources location="/download/" mapping="/download/**" />
+    <mvc:resources location="/js/" mapping="/js/**" />
+    <mvc:resources location="/css/" mapping="/css/**" />
+    <mvc:resources location="/assets/" mapping="/assets/**" />
+    <mvc:resources location="/plugin/" mapping="/plugin/**" />
+    <mvc:resources location="/WEB-INF/pages/" mapping="/pages/**" />
+
+    <!-- 避免在返回中文时出现乱码,默认的编码为iso8859-1 -->
+    <bean id="stringMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+        <constructor-arg index="0" value="UTF-8"></constructor-arg>
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/plain;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 避免IE上返回json文件时，出现文件下载情况 -->
+    <bean id="fastJsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>application/json;charset=UTF-8</value>
+                <!-- 该句避免在IE上出现返回json时，是文件下载 -->
+                <value>text/plain;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 避免返回xml时出现文件下载情况 -->
+    <bean id="marshallingHttpMessageConverter"  class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+        <property name="marshaller" ref="castorMarshaller" />
+        <property name="unmarshaller" ref="castorMarshaller" />
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/xml;charset=UTF-8</value>
+                <value>application/xml;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="castorMarshaller" class="org.springframework.oxm.castor.CastorMarshaller" />
+
+    <!-- 定义视图解析器 -->
+    <bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.InternalResourceView"></property>
+        <property name="prefix" value="/WEB-INF/pages/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+    <!-- 文件上传 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 请求的编码格式，默认为iso8859-1 -->
+        <property name="defaultEncoding" value="UTF-8"></property>
+        <!-- 上传文件的总最大限制 -->
+        <property name="maxUploadSize" value="52428800"></property>
+        <!-- 上传文件的临时路径 -->
+        <property name="uploadTempDir" value="/upload"></property>
+    </bean>
+
+    <!-- spring异常处理器 -->
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.Throwable">error/500</prop>
+            </props>
+        </property>
+        <property name="statusCodes">
+            <props>
+                <prop key="errors/500">500</prop>
+            </props>
+        </property>
+        <property name="warnLogCategory" value="WARN"></property>
+        <property name="defaultErrorView" value="error/500"></property>
+        <property name="defaultStatusCode" value="500"></property>
+    </bean>
+
+</beans>

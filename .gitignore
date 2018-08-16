@@ -1,0 +1,26 @@
+/*/target/
+/*/*/target/
+/.settings
+/*/.gitignore
+*.settings
+*.project
+*.class
+*.classpath
+*.jar
+*.war
+*.zip
+/target
+/build
+/bin
+*/src/main/webapp/WEB-INF/classes/
+*/src/main/webapp/WEB-INF/
+# idea ignore
+.idea
+*.ipr
+*.iml
+*.iws
+.iml
+.idea/
+.projectile
+*.iml
+.DS_Store
