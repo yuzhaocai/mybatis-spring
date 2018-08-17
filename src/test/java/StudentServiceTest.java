@@ -37,6 +37,7 @@ public class StudentServiceTest {
     @Test
     public void getStudentTest() {
         Student student = studentService.getStudent(1);
+        System.out.println("student:" + student);
         Assert.assertNotNull(student);
         Assert.assertEquals(Integer.valueOf(1), student.getClassId());
     }

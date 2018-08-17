@@ -16,7 +16,7 @@
     <aop:aspectj-autoproxy/>
 
     <!-- 开启spring对注解Bean扫描 -->
-    <context:component-scan base-package="com.xes.speiyou">
+    <context:component-scan base-package="com.itcast">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
@@ -59,7 +59,13 @@
     <!-- mybatis整合spring -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"></property>
-        <property name="typeAliasesPackage" value="com.xes.speiyou.domain"></property>
+        <property name="typeAliasesPackage" value="com.itcast.domain"></property>
+        <property name="configurationProperties">
+            <props>
+                <!-- 数据库字段下划线转驼峰式,这个参数好像不起作用 -->
+                <prop key="mapUnderscoreToCamelCase">true</prop>
+            </props>
+        </property>
         <property name="plugins">
             <array>
                 <!-- 分页插件: https://github.com/pagehelper-->
@@ -78,7 +84,7 @@
 
     <!-- 自动扫描mapper，并加入spring容器,使用mybatis通用mapper, 通用mapper: https://github.com/abel533/Mapper -->
     <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.xes.speiyou.mapper"></property>
+        <property name="basePackage" value="com.itcast.mapper"></property>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
         <property name="properties">
             <value>mappers=tk.mybatis.mapper.common.Mapper</value>

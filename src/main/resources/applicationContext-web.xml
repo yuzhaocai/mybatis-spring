@@ -8,7 +8,7 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!-- 开启spring对Controller的扫描 -->
-    <context:component-scan base-package="com.xes.speiyou.controller"/>
+    <context:component-scan base-package="com.itcast.controller"/>
 
     <mvc:annotation-driven>
         <mvc:message-converters>
